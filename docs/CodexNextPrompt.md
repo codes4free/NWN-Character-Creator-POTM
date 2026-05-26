@@ -4,53 +4,48 @@ Use this file to track the next high-priority coding prompt for the project.
 
 ## Suggested Next Prompt
 
-Build **Phase 1 (Specification) - Step 3: Define race schema**.
+Build **Phase 1 (Specification) - Step 4: Define class schema**.
 
 ### Prompt to run
 
-Create `docs/RaceSchema.md` as a formal schema specification for base races and subraces.
+Create `docs/ClassSchema.md` as a formal schema specification for base classes and prestige classes.
 
 #### Required sections
 
 1. Purpose and scope
-- What race schema must represent for NWN + POTM.
-- Relationship to `docs/CharacterSchema.md` (`character.race`).
+- Relationship to `character.classes` from `docs/CharacterSchema.md`.
+- Relationship to class/prestige validation responsibilities in `docs/RulesEngine.md`.
 
-2. Canonical race object shape
-- Required fields (name, type, size, speed, vision, etc.).
-- Modifier and bonus containers (attributes, skills, saves, feats, weapon familiarity).
-- Restriction fields (alignment, class, deity, or setting-specific constraints where applicable).
+2. Canonical base class object shape
+- Required fields (`id`, `name`, `hitDie`, `skillPointsPerLevel`, `baseAttackBonusProgression`, save progressions).
+- Class skills, feat grants, and progression tables.
+- Class-specific restrictions and metadata.
 
-3. Subrace object shape
-- Parent race linkage.
-- Override/extension rules vs base race.
-- Conflict-resolution strategy when base and subrace both modify same stat.
+3. Canonical prestige class object shape
+- Prerequisite blocks (level, BAB, skills, feats, alignment, spellcasting, class requirements).
+- Progression fields and granted features.
 
 4. Validation rules
-- Required keys and data types.
-- Value constraints (integer ranges, enum-like fields, unique ids/names).
-- `sourceStatus` requirement for unverified rules.
+- Required keys/types.
+- Enum/value constraints.
+- Uniqueness rules (`id`, `name`).
+- `sourceMetadata.sourceStatus` handling for uncertain rules.
 
 5. Source metadata
-- Include `source`, `sourceUrl`, and optional `sourceNotes` fields.
-- Include `lastVerified` date field (ISO format).
+- `source`, `sourceUrl`, optional `sourceNotes`, `sourceStatus`, `lastVerified`.
 
 6. Example records
-- One fully worked base race example.
-- One fully worked subrace example.
+- One complete base class example.
+- One complete prestige class example.
 
 7. Definition of done
-- `docs/RaceSchema.md` is complete and implementation-ready for data entry.
-- Terminology stays aligned with `docs/CharacterSchema.md` and `docs/RulesEngine.md`.
+- `docs/ClassSchema.md` is implementation-ready for data entry and engine integration.
 
 ### References
 
-Use `docs/ResearchLinks.md` for source material:
-- POTM server rules
-- classes/subclasses reference thread
-- NWN general wiki
+Use `docs/ResearchLinks.md` for source material.
 
 ### Constraints
 
 - Documentation-only for this step (no engine code).
-- Do not hardcode uncertain values as final; flag with `sourceStatus: "needs-verification"`.
+- Flag uncertain values with `sourceStatus: "needs-verification"`.
