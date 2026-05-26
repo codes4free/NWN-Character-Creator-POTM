@@ -4,46 +4,53 @@ Use this file to track the next high-priority coding prompt for the project.
 
 ## Suggested Next Prompt
 
-Build **Phase 1 (Specification) - Step 2: Define rules engine responsibilities**.
+Build **Phase 1 (Specification) - Step 3: Define race schema**.
 
 ### Prompt to run
 
-Create a formal responsibilities spec in `docs/RulesEngine.md` that defines:
+Create `docs/RaceSchema.md` as a formal schema specification for base races and subraces.
 
-1. Engine scope boundaries
-- What the engine owns (calculation + validation).
-- What the engine does not own (UI behavior, persistence adapters).
+#### Required sections
 
-2. Inputs and outputs
-- Expected input shape (character snapshot + reference data).
-- Standard validation output contract:
-  - `isValid`
-  - structured `errors`
-  - structured `warnings`
-  - stable `code` values for each rule failure.
+1. Purpose and scope
+- What race schema must represent for NWN + POTM.
+- Relationship to `docs/CharacterSchema.md` (`character.race`).
 
-3. Responsibility modules (initial)
-- Attribute calculation responsibilities.
-- Skill-point and skill-cost responsibilities.
-- Feat prerequisite validation responsibilities.
-- Class/prestige qualification responsibilities.
-- Spell/domain eligibility responsibilities.
+2. Canonical race object shape
+- Required fields (name, type, size, speed, vision, etc.).
+- Modifier and bonus containers (attributes, skills, saves, feats, weapon familiarity).
+- Restriction fields (alignment, class, deity, or setting-specific constraints where applicable).
 
-4. Rule source-of-truth contract
-- Rule data comes from `data/` (or future `src/data`).
-- Engine must not hardcode race/class/feat/domain tables in business logic.
-- Uncertain rules must be marked `sourceStatus: "needs-verification"` in data files.
+3. Subrace object shape
+- Parent race linkage.
+- Override/extension rules vs base race.
+- Conflict-resolution strategy when base and subrace both modify same stat.
 
-5. Determinism and traceability
-- Same inputs must produce same outputs.
-- Validation messages should include rule source references.
+4. Validation rules
+- Required keys and data types.
+- Value constraints (integer ranges, enum-like fields, unique ids/names).
+- `sourceStatus` requirement for unverified rules.
 
-6. Definition of done for this step
-- `docs/RulesEngine.md` includes clear module responsibilities.
-- Input/output contracts are documented.
-- Non-goals are listed to prevent scope creep.
+5. Source metadata
+- Include `source`, `sourceUrl`, and optional `sourceNotes` fields.
+- Include `lastVerified` date field (ISO format).
+
+6. Example records
+- One fully worked base race example.
+- One fully worked subrace example.
+
+7. Definition of done
+- `docs/RaceSchema.md` is complete and implementation-ready for data entry.
+- Terminology stays aligned with `docs/CharacterSchema.md` and `docs/RulesEngine.md`.
+
+### References
+
+Use `docs/ResearchLinks.md` for source material:
+- POTM server rules
+- classes/subclasses reference thread
+- NWN general wiki
 
 ### Constraints
 
-- Keep this step documentation-only (no application code yet).
-- Keep terminology aligned with `docs/CharacterSchema.md`.
+- Documentation-only for this step (no engine code).
+- Do not hardcode uncertain values as final; flag with `sourceStatus: "needs-verification"`.
