@@ -34,7 +34,7 @@ Humans are adaptable and ambitious. They receive additional feats and skill poin
   "vision": "Normal",
   "favoredClass": "Any",
   "levelAdjustment": 0,
-  "sourceStatus": "verified"
+  "sourceStatus": "needs-verification"
 }
 ```
 
@@ -60,7 +60,7 @@ Humans are adaptable and ambitious. They receive additional feats and skill poin
   "name": "Quick to Master",
   "type": "Racial",
   "effect": "Gain one extra feat at character creation.",
-  "sourceStatus": "verified"
+  "sourceStatus": "needs-verification"
 }
 ```
 
@@ -71,7 +71,7 @@ Humans are adaptable and ambitious. They receive additional feats and skill poin
   "name": "Skilled",
   "type": "Racial",
   "effect": "+4 skill points at level 1 and +1 skill point every additional level.",
-  "sourceStatus": "verified"
+  "sourceStatus": "needs-verification"
 }
 ```
 
@@ -95,11 +95,6 @@ Humans are adaptable and ambitious. They receive additional feats and skill poin
     "int": 0,
     "wis": 0,
     "cha": 0
-  },
-  "skillBonuses": {
-    "listen": 2,
-    "search": 2,
-    "spot": 2
   },
   "sourceStatus": "needs-verification"
 }
@@ -150,6 +145,81 @@ Humans are adaptable and ambitious. They receive additional feats and skill poin
     "int": 0,
     "wis": 0,
     "cha": 0
+  },
+  "sourceStatus": "needs-verification"
+}
+```
+
+---
+
+# Gnome
+
+```json
+{
+  "name": "Gnome",
+  "type": "Humanoid",
+  "size": "Small",
+  "movementSpeed": 20,
+  "vision": "Low-Light Vision",
+  "favoredClass": "Bard",
+  "levelAdjustment": 0,
+  "attributeModifiers": {
+    "str": -2,
+    "dex": 0,
+    "con": 2,
+    "int": 0,
+    "wis": 0,
+    "cha": 0
+  },
+  "sourceStatus": "needs-verification"
+}
+```
+
+---
+
+# Half-Elf
+
+```json
+{
+  "name": "Half-Elf",
+  "type": "Humanoid",
+  "size": "Medium",
+  "movementSpeed": 30,
+  "vision": "Low-Light Vision",
+  "favoredClass": "Any",
+  "levelAdjustment": 0,
+  "attributeModifiers": {
+    "str": 0,
+    "dex": 0,
+    "con": 0,
+    "int": 0,
+    "wis": 0,
+    "cha": 0
+  },
+  "sourceStatus": "needs-verification"
+}
+```
+
+---
+
+# Half-Orc
+
+```json
+{
+  "name": "Half-Orc",
+  "type": "Humanoid",
+  "size": "Medium",
+  "movementSpeed": 30,
+  "vision": "Darkvision",
+  "favoredClass": "Barbarian",
+  "levelAdjustment": 0,
+  "attributeModifiers": {
+    "str": 2,
+    "dex": 0,
+    "con": 0,
+    "int": -2,
+    "wis": 0,
+    "cha": -2
   },
   "sourceStatus": "needs-verification"
 }
