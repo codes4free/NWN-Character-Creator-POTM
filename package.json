@@ -1,40 +1,10 @@
-# Codex Next Prompt
-
-Use this prompt inside Codex to continue the project.
-
-```txt
-Read AGENTS.md, README.md, docs/CharacterSchema.md, docs/RulesEngine.md, and data/Races.md.
-
-Create the initial TypeScript project structure for a Next.js app.
-
-Do not build the full UI yet.
-
-Create these files:
-
-- src/types/character.ts
-- src/types/rules.ts
-- src/types/race.ts
-- src/engine/attributeRules.ts
-- src/engine/skillRules.ts
-- src/engine/validation.ts
-- src/data/races.ts
-
-Implement only the basic schema and pure functions for:
-
-- Attribute modifier calculation
-- Final attribute calculation
-- Human bonus feat rule placeholder
-- Human skill point bonus rule
-- Skill cost for class skill and cross-class skill
-- Validation result format
-
-Rules:
-
-- Do not hardcode rules in UI components.
-- Keep all functions pure and testable.
-- Use strict TypeScript.
-- Use sourceStatus: "verified" | "needs-verification" on rule data.
-- Do not invent POTM rules. If uncertain, mark as needs-verification.
-
-After creating the files, add a short summary explaining what was implemented and what should be done next.
-```
+{
+  "name": "nwn-character-creator-potm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test tests/**/*.test.js"
+  }
+}
