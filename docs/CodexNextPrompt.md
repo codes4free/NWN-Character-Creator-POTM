@@ -49,3 +49,9 @@ Use `docs/ResearchLinks.md` for source material.
 
 - Documentation-only for this step (no engine code).
 - Flag uncertain values with `sourceStatus: "needs-verification"`.
+Implement the initial rules engine module structure and add tests for:
+- attribute modifier calculation
+- final attribute calculation
+- basic validation output
+
+Reference the roadmap in `docs/DevelopmentRoadmap.md` and keep rule data in `data/`.

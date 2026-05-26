@@ -24,6 +24,12 @@ Every saved character must include a schema version for forward compatibility.
 ```json
 {
   "schemaVersion": "1.0.0",
+The Character Schema defines the full data structure used to create, validate, save, and export a POTM/NWN character sheet.
+
+## Core Character Object
+
+```json
+{
   "character": {
     "identity": {},
     "race": {},
@@ -43,6 +49,7 @@ Every saved character must include a schema version for forward compatibility.
 ### `character.identity`
 
 Stores roleplay and profile metadata.
+## Identity
 
 ```json
 {
@@ -63,6 +70,7 @@ Rules:
 ### `character.race`
 
 Stores base race, subrace, and racial modifiers selected for this character.
+## Race
 
 ```json
 {
@@ -93,6 +101,7 @@ Rules:
 ### `character.classes`
 
 Ordered level progression. One entry per character level.
+## Classes
 
 ```json
 [
@@ -123,6 +132,22 @@ Rules:
 ### `character.attributes`
 
 Tracks base scores, additive modifiers, and computed final results.
+    "className": "",
+    "level": 1,
+    "hitDie": "",
+    "baseAttackBonusType": "",
+    "fortitudeSave": "",
+    "reflexSave": "",
+    "willSave": "",
+    "skillPointsPerLevel": 0,
+    "classSkills": [],
+    "bonusFeats": [],
+    "specialAbilities": []
+  }
+]
+```
+
+## Attributes
 
 ```json
 {
@@ -171,12 +196,22 @@ Rules:
 ### `character.skills`
 
 Captures point pool, rank spending, and computed totals.
+  "racialModifiers": {},
+  "levelUpModifiers": {},
+  "featModifiers": {},
+  "equipmentModifiers": {},
+  "final": {}
+}
+```
+
+## Skills
 
 ```json
 {
   "availableSkillPoints": 0,
   "spentSkillPoints": 0,
   "entries": {
+  "skills": {
     "hide": {
       "ranks": 0,
       "ability": "dex",
@@ -197,6 +232,7 @@ Rules:
 ### `character.feats`
 
 Tracks feats acquired from all sources.
+## Feats
 
 ```json
 [
@@ -219,6 +255,15 @@ Rules:
 ### `character.spells`
 
 Stores spellcasting selections by class.
+    "type": "",
+    "source": "",
+    "levelTaken": 1,
+    "requirementsMet": true
+  }
+]
+```
+
+## Spells
 
 ```json
 {
@@ -250,6 +295,12 @@ Optional equipment snapshot for derived modifiers.
 ### `character.validation`
 
 Engine output for user-facing validity feedback.
+  "spellDC": {},
+  "spellSlots": {}
+}
+```
+
+## Validation
 
 ```json
 {
