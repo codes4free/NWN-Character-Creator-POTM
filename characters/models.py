@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-from rules.models import CharacterClass, Race, Skill, Subrace
+from rules.models import CharacterClass, Feat, Race, Skill, Subrace
 
 
 class Alignment(models.TextChoices):
@@ -250,6 +250,18 @@ class Character(models.Model):
 
         return rows
 
+    @property
+    def feat_rows(self) -> list[dict[str, str]]:
+        return [
+            {
+                "name": character_feat.feat.name,
+                "type": character_feat.feat.feat_type or "-",
+                "source_status": character_feat.feat.get_source_status_display(),
+                "description": character_feat.feat.description,
+            }
+            for character_feat in self.feats.select_related("feat").order_by("feat__name")
+        ]
+
 
 class CharacterClassLevel(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name="class_levels")
@@ -346,6 +358,23 @@ class CharacterSkill(models.Model):
     @property
     def max_ranks(self) -> int:
         return self.character.skill_max_ranks(self.skill)
+
+
+class CharacterFeat(models.Model):
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name="feats")
+    feat = models.ForeignKey(Feat, on_delete=models.PROTECT, related_name="character_feats")
+
+    class Meta:
+        ordering = ["feat__name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["character", "feat"],
+                name="unique_character_feat",
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.character.name}: {self.feat.name}"
 
 
 def ability_modifier(score: int) -> int:

@@ -1,9 +1,9 @@
 from django import forms
 
 from rules.models import CharacterClass
-from rules.models import Skill, Subrace
+from rules.models import Feat, Skill, Subrace
 
-from .models import Character, CharacterClassLevel, CharacterSkill
+from .models import Character, CharacterClassLevel, CharacterFeat, CharacterSkill
 from .point_buy import (
     ABILITY_SCORE_MAXIMUM,
     ABILITY_SCORE_MINIMUM,
@@ -318,4 +318,32 @@ class CharacterSkillForm(forms.Form):
             retained_ids.append(character_skill.pk)
 
         self.character.skills.exclude(pk__in=retained_ids).delete()
+        return self.character
+
+
+class CharacterFeatForm(forms.Form):
+    feats = forms.ModelMultipleChoiceField(
+        queryset=Feat.objects.none(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+    )
+
+    def __init__(self, *args, character: Character, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.character = character
+        self.fields["feats"].queryset = Feat.objects.order_by("name")
+        self.fields["feats"].initial = character.feats.values_list("feat_id", flat=True)
+
+    def save(self):
+        selected_feats = list(self.cleaned_data["feats"])
+        retained_ids = []
+
+        for feat in selected_feats:
+            character_feat, _ = CharacterFeat.objects.get_or_create(
+                character=self.character,
+                feat=feat,
+            )
+            retained_ids.append(character_feat.pk)
+
+        self.character.feats.exclude(pk__in=retained_ids).delete()
         return self.character

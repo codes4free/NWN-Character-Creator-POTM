@@ -1,7 +1,12 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView, ListView
 
-from .forms import CharacterClassProgressionForm, CharacterForm, CharacterSkillForm
+from .forms import (
+    CharacterClassProgressionForm,
+    CharacterFeatForm,
+    CharacterForm,
+    CharacterSkillForm,
+)
 from .models import Character
 from .point_buy import remaining_points, total_point_buy_cost
 
@@ -26,7 +31,9 @@ class CharacterDetailView(DetailView):
 
     def get_queryset(self):
         return Character.objects.select_related("race", "subrace").prefetch_related(
-            "class_levels__character_class"
+            "class_levels__character_class",
+            "feats__feat",
+            "skills__skill",
         )
 
     def get_context_data(self, **kwargs):
@@ -143,6 +150,30 @@ def edit_skills(request, pk):
     return render(
         request,
         "characters/skills_form.html",
+        {
+            "character": character,
+            "form": form,
+        },
+    )
+
+
+def edit_feats(request, pk):
+    character = get_object_or_404(
+        Character.objects.prefetch_related("feats__feat"),
+        pk=pk,
+    )
+
+    if request.method == "POST":
+        form = CharacterFeatForm(request.POST, character=character)
+        if form.is_valid():
+            form.save()
+            return redirect(character)
+    else:
+        form = CharacterFeatForm(character=character)
+
+    return render(
+        request,
+        "characters/feats_form.html",
         {
             "character": character,
             "form": form,

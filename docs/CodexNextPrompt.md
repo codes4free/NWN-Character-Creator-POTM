@@ -11,7 +11,8 @@ Next tasks:
 - Add class level progression to character sheets.
 - Add derived class calculations for total hit die summary.
 - Add validation warnings for unverified class records used by a character.
-- Expand and verify class-skill mappings beyond the starter `src/data/skills.ts` records.
+- Verify the full starter `src/data/skills.ts` class-skill mappings against POTM-specific rules.
+- Add feat prerequisite validation and eventually expand `src/data/feats.ts` beyond the starter records.
 - Continue shaping the character detail page around the NWN2DB-style build format.
 - Use `src/data/plannerClasses.ts` as the expanded class progression seed, while preserving `needs_verification`.
 - Keep the edit page working for existing race, attribute, and starting class updates.

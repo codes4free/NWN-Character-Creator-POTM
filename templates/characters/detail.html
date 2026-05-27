@@ -14,6 +14,7 @@
       <a class="button" href="{% url 'characters:edit' character.pk %}">Edit Sheet</a>
       <a class="button" href="{% url 'characters:class_progression' character.pk %}">Class Levels</a>
       <a class="button" href="{% url 'characters:skills' character.pk %}">Skills</a>
+      <a class="button" href="{% url 'characters:feats' character.pk %}">Feats</a>
       <a class="button" href="/admin/characters/character/{{ character.pk }}/change/">Edit in Admin</a>
     </div>
   </header>
@@ -22,6 +23,7 @@
     <a href="#summary">Summary</a>
     <a href="#progression">Class Progression</a>
     <a href="#skills">Skills</a>
+    <a href="#feats">Feats</a>
     <a href="#notes">Notes</a>
   </nav>
 
@@ -195,6 +197,36 @@
         </table>
       {% else %}
         <p class="muted">No skill ranks selected yet.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section id="feats" class="sheet-section">
+    <h2>Feats</h2>
+    <div class="panel">
+      {% if character.feat_rows %}
+        <table>
+          <thead>
+            <tr>
+              <th>Feat</th>
+              <th>Type</th>
+              <th>Source Status</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in character.feat_rows %}
+              <tr>
+                <td>{{ row.name }}</td>
+                <td>{{ row.type }}</td>
+                <td>{{ row.source_status }}</td>
+                <td>{{ row.description|default:"-" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="muted">No feats selected yet.</p>
       {% endif %}
     </div>
   </section>

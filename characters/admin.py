@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Character, CharacterClassLevel, CharacterSkill
+from .models import Character, CharacterClassLevel, CharacterFeat, CharacterSkill
 
 
 class CharacterClassLevelInline(admin.TabularInline):
@@ -10,6 +10,11 @@ class CharacterClassLevelInline(admin.TabularInline):
 
 class CharacterSkillInline(admin.TabularInline):
     model = CharacterSkill
+    extra = 0
+
+
+class CharacterFeatInline(admin.TabularInline):
+    model = CharacterFeat
     extra = 0
 
 
@@ -45,4 +50,4 @@ class CharacterAdmin(admin.ModelAdmin):
         ),
         ("Timestamps", {"fields": ["created_at", "updated_at"]}),
     ]
-    inlines = [CharacterClassLevelInline, CharacterSkillInline]
+    inlines = [CharacterClassLevelInline, CharacterSkillInline, CharacterFeatInline]

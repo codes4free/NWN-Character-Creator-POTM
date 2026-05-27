@@ -71,7 +71,7 @@ class SeedCoreRulesImportTests(TestCase):
 
         self.assertEqual(CharacterClass.objects.count(), 34)
         self.assertEqual(PrestigeClass.objects.count(), 2)
-        self.assertEqual(Skill.objects.count(), 3)
+        self.assertEqual(Skill.objects.count(), 27)
         self.assertEqual(Feat.objects.count(), 3)
 
         fighter = CharacterClass.objects.get(key="fighter")
@@ -98,6 +98,11 @@ class SeedCoreRulesImportTests(TestCase):
         self.assertTrue(hide.armor_check_penalty)
         self.assertIn("rogue", hide.class_skill_ids)
         self.assertEqual(hide.source_section, "src/data/skills.ts:hide")
+
+        animal_empathy = Skill.objects.get(key="animal_empathy")
+        self.assertEqual(animal_empathy.ability, "cha")
+        self.assertTrue(animal_empathy.trained_only)
+        self.assertIn("ranger", animal_empathy.class_skill_ids)
 
         power_attack = Feat.objects.get(key="power_attack")
         self.assertEqual(power_attack.feat_type, "general")
@@ -165,7 +170,7 @@ class AllSeedDataImportTests(TestCase):
         self.assertEqual(Subrace.objects.count(), 15)
         self.assertEqual(CharacterClass.objects.count(), 34)
         self.assertEqual(PrestigeClass.objects.count(), 2)
-        self.assertEqual(Skill.objects.count(), 3)
+        self.assertEqual(Skill.objects.count(), 27)
         self.assertEqual(Feat.objects.count(), 3)
         self.assertEqual(SpellSchool.objects.count(), 3)
         self.assertEqual(Spell.objects.count(), 3)

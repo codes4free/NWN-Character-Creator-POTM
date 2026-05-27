@@ -12,4 +12,5 @@ urlpatterns = [
     path("<int:pk>/edit/", views.edit_character, name="edit"),
     path("<int:pk>/classes/", views.edit_class_progression, name="class_progression"),
     path("<int:pk>/skills/", views.edit_skills, name="skills"),
+    path("<int:pk>/feats/", views.edit_feats, name="feats"),
 ]

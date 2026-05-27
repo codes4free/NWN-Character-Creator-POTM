@@ -4,9 +4,16 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 
-from rules.models import CharacterClass, Race, Skill, Subrace
+from rules.models import CharacterClass, Feat, Race, Skill, Subrace
 
-from .models import Character, CharacterClassLevel, CharacterSkill, ability_modifier, format_modifier
+from .models import (
+    Character,
+    CharacterClassLevel,
+    CharacterFeat,
+    CharacterSkill,
+    ability_modifier,
+    format_modifier,
+)
 from .point_buy import ability_point_cost, remaining_points, total_point_buy_cost
 
 
@@ -511,6 +518,62 @@ class CharacterSheetTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, reverse("characters:edit", kwargs={"pk": character.pk}))
         self.assertContains(response, reverse("characters:class_progression", kwargs={"pk": character.pk}))
+        self.assertContains(response, reverse("characters:feats", kwargs={"pk": character.pk}))
+
+    def test_feat_editor_saves_selected_feats_and_sheet_rows(self):
+        human = Race.objects.get(key="human")
+        fighter = CharacterClass.objects.get(key="fighter")
+        power_attack = Feat.objects.get(key="power_attack")
+        dodge = Feat.objects.get(key="dodge")
+        character = Character.objects.create(name="Feat Edit", race=human)
+        CharacterClassLevel.objects.create(
+            character=character,
+            character_class=fighter,
+            level=1,
+        )
+
+        response = self.client.post(
+            reverse("characters:feats", kwargs={"pk": character.pk}),
+            data={"feats": [power_attack.pk, dodge.pk]},
+        )
+
+        character.refresh_from_db()
+
+        self.assertRedirects(response, character.get_absolute_url())
+        self.assertEqual(CharacterFeat.objects.count(), 2)
+        self.assertEqual(
+            set(character.feats.values_list("feat__key", flat=True)),
+            {"power_attack", "dodge"},
+        )
+        self.assertIn(
+            {
+                "name": "Power Attack",
+                "type": "general",
+                "source_status": "Needs verification",
+                "description": "Trade attack bonus for melee damage.",
+            },
+            character.feat_rows,
+        )
+
+    def test_feat_editor_can_clear_selected_feats(self):
+        human = Race.objects.get(key="human")
+        fighter = CharacterClass.objects.get(key="fighter")
+        power_attack = Feat.objects.get(key="power_attack")
+        character = Character.objects.create(name="Feat Clear", race=human)
+        CharacterClassLevel.objects.create(
+            character=character,
+            character_class=fighter,
+            level=1,
+        )
+        CharacterFeat.objects.create(character=character, feat=power_attack)
+
+        response = self.client.post(
+            reverse("characters:feats", kwargs={"pk": character.pk}),
+            data={},
+        )
+
+        self.assertRedirects(response, character.get_absolute_url())
+        self.assertEqual(CharacterFeat.objects.count(), 0)
 
     def test_class_progression_page_updates_multiclass_levels(self):
         human = Race.objects.get(key="human")

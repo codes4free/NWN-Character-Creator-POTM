@@ -76,6 +76,7 @@ On Linux servers, use `.venv/bin/python` instead of `.venv/Scripts/python`.
 - `/characters/<id>/edit/`: edit an existing character sheet.
 - `/characters/<id>/classes/`: edit class level progression.
 - `/characters/<id>/skills/`: edit skill ranks and track spent/unspent skill points.
+- `/characters/<id>/feats/`: select feats from the imported feat database.
 - `/admin/`: Django Admin for managing rule records.
 
 ## Character Creation Rules
@@ -97,7 +98,9 @@ At character level 20 or higher, every selected class in a multiclass build must
 
 Character detail pages follow a build-sheet format inspired by NWN2DB: build header, section links, summary, ability table, attack bonuses, class progression, skills, and notes.
 
-The skills module spends 1 point per class-skill rank and 2 points per cross-class rank. It also caps ranks at character level + 3 for class skills and half that for cross-class skills. Class-skill mappings are imported from `src/data/skills.ts`; the current starter mappings are still marked for verification.
+The skills module imports the full starter NWN skill catalog from `src/data/skills.ts`. It spends 1 point per class-skill rank and 2 points per cross-class rank, then caps ranks at character level + 3 for class skills and half that for cross-class skills. Class-skill mappings are still marked for POTM verification.
+
+The feats module stores selected feats on a character sheet and displays their imported type, source status, and summary. Feat prerequisite validation is still a future rules-engine step.
 
 ## Data Files
 

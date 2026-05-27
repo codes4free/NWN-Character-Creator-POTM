@@ -1,0 +1,35 @@
+{% extends "rules/base.html" %}
+
+{% block title %}Feats | {{ character.name }}{% endblock %}
+
+{% block content %}
+  <header>
+    <h1>Feats</h1>
+    <p class="subtitle">{{ character.name }} has {{ character.feats.count }} selected feat{{ character.feats.count|pluralize }}.</p>
+    <div class="actions">
+      <a class="button" href="{{ character.get_absolute_url }}">View Sheet</a>
+      <a class="button" href="{% url 'characters:skills' character.pk %}">Skills</a>
+      <a class="button" href="{% url 'characters:list' %}">Characters</a>
+    </div>
+  </header>
+
+  <section>
+    <form method="post" class="sheet-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="panel">
+        <h2>Selected Feats</h2>
+        {{ form.feats.errors }}
+        <div class="form-grid">
+          {% for choice in form.feats %}
+            <label>
+              {{ choice.tag }}
+              <span>{{ choice.choice_label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+      <button class="button" type="submit">Save Feats</button>
+    </form>
+  </section>
+{% endblock %}
