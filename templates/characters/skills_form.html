@@ -1,0 +1,51 @@
+{% extends "rules/base.html" %}
+
+{% block title %}Skills | {{ character.name }}{% endblock %}
+
+{% block content %}
+  <header>
+    <h1>Skills</h1>
+    <p class="subtitle">{{ character.name }} has {{ character.available_skill_points }} skill points, with {{ character.unspent_skill_points }} currently unspent. Class skills cost 1 point per rank; cross-class skills cost 2.</p>
+    <div class="actions">
+      <a class="button" href="{{ character.get_absolute_url }}">View Sheet</a>
+      <a class="button" href="{% url 'characters:class_progression' character.pk %}">Class Levels</a>
+      <a class="button" href="{% url 'characters:list' %}">Characters</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="point-buy-summary">
+      <div>
+        <strong>{{ character.available_skill_points }}</strong>
+        <span>Total Points</span>
+      </div>
+      <div>
+        <strong>{{ character.spent_skill_points }}</strong>
+        <span>Spent Points</span>
+      </div>
+      <div>
+        <strong>{{ character.unspent_skill_points }}</strong>
+        <span>Unspent Points</span>
+      </div>
+    </div>
+
+    <form method="post" class="sheet-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="panel">
+        <h2>Skill Ranks</h2>
+        <div class="form-grid">
+          {% for field in form %}
+            <label>
+              <span>{{ field.label }}</span>
+              {{ field }}
+              {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+              {{ field.errors }}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+      <button class="button" type="submit">Save Skills</button>
+    </form>
+  </section>
+{% endblock %}

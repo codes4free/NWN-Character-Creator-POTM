@@ -1,0 +1,49 @@
+{% extends "rules/base.html" %}
+
+{% block title %}Characters | POTM Character Creator{% endblock %}
+
+{% block content %}
+  <header>
+    <h1>Characters</h1>
+    <p class="subtitle">Create and review online character sheets.</p>
+    <div class="actions">
+      <a class="button" href="{% url 'characters:create' %}">New Character</a>
+      <a class="button" href="{% url 'rules:overview' %}">Rule Database</a>
+    </div>
+  </header>
+
+  <section>
+    {% if characters %}
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Race</th>
+            <th>Subrace</th>
+            <th>Class</th>
+            <th>Level</th>
+            <th>Alignment</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for character in characters %}
+            <tr>
+              <td><a href="{{ character.get_absolute_url }}">{{ character.name }}</a></td>
+              <td>{{ character.race.name }}</td>
+              <td>{{ character.subrace.name|default:"-" }}</td>
+              <td>{{ character.class_breakdown|default:"-" }}</td>
+              <td>{{ character.total_level }}</td>
+              <td>{{ character.get_alignment_display|default:"-" }}</td>
+              <td>{{ character.updated_at }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="panel">
+        <p class="muted">No character sheets yet.</p>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

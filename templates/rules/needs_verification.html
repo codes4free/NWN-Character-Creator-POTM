@@ -1,0 +1,54 @@
+{% extends "rules/base.html" %}
+
+{% block title %}Needs Verification | POTM Character Creator{% endblock %}
+
+{% block content %}
+  <header>
+    <h1>Needs Verification</h1>
+    <p class="subtitle">{{ total_needs_verification }} imported rule records still need source verification before they should be trusted for character creation.</p>
+    <div class="actions">
+      <a class="button" href="{% url 'rules:overview' %}">Overview</a>
+      <a class="button" href="/admin/">Open Admin</a>
+    </div>
+  </header>
+
+  {% for label, records in grouped_records %}
+    <section aria-labelledby="{{ label|slugify }}-title">
+      <h2 id="{{ label|slugify }}-title">{{ label }}</h2>
+      {% if records %}
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Source</th>
+              <th>Section</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in records %}
+              <tr>
+                <td>{{ record.name }}</td>
+                <td>
+                  {% if record.source and record.source.url %}
+                    <a href="{{ record.source.url }}">{{ record.source.name }}</a>
+                  {% elif record.source %}
+                    {{ record.source.name }}
+                  {% else %}
+                    <span class="muted">No source</span>
+                  {% endif %}
+                </td>
+                <td>{{ record.source_section|default:"-" }}</td>
+                <td>{{ record.notes|default:"-" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="panel">
+          <p class="muted">No records need verification in this group.</p>
+        </div>
+      {% endif %}
+    </section>
+  {% endfor %}
+{% endblock %}

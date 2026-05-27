@@ -18,6 +18,15 @@
 - Basic validation output
 - Human racial bonus handling
 
+## Phase 2A: Database Foundation
+
+- Create Django project scaffold
+- Define rule source tracking
+- Define initial database tables for rules data
+- Register rule data models in Django Admin
+- Seed documented research links as database sources
+- Add import commands for structured markdown/data migration
+
 ## Phase 3: Data Expansion
 
 - Add base races

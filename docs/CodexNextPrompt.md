@@ -4,33 +4,19 @@ Use this file to track the next high-priority coding prompt for the project.
 
 ## Suggested Next Prompt
 
-Build **Phase 6 (Verification) - Step 3: Verify classes and prestige classes with concrete citations**.
+Continue the online character sheet foundation.
 
-### Prompt to run
+Next tasks:
 
-Extend `docs/VerificationChecklist.md` with citation-backed evidence for class and prestige class seed records.
-
-#### Requirements
-
-1. Focus scope
-- Verify entries under:
-  - `src/data/classes.ts`
-  - `src/data/prestigeClasses.ts`
-
-2. Evidence requirements
-- For each class/prestige record, add:
-  - concrete source URL
-  - short evidence note
-  - verification date
-
-3. Status discipline
-- Only move to `confirmed` when evidence is explicit in checklist notes.
-- Keep unresolved details at `needs-verification`.
-
-4. Consistency updates
-- If citations contradict current seed values, update corresponding `src/data/*` and `data/*.md` entries.
-
-### Constraints
-
-- Keep uncertainty explicit and auditable.
-- Prefer primary/official references where available.
+- Add class level progression to character sheets.
+- Add derived class calculations for total hit die summary.
+- Add validation warnings for unverified class records used by a character.
+- Expand and verify class-skill mappings beyond the starter `src/data/skills.ts` records.
+- Continue shaping the character detail page around the NWN2DB-style build format.
+- Use `src/data/plannerClasses.ts` as the expanded class progression seed, while preserving `needs_verification`.
+- Keep the edit page working for existing race, attribute, and starting class updates.
+- Preserve the level 20 multiclass rule: each selected class must have at least 5 levels.
+- Keep the existing 30-point ability score budget validation intact.
+- Preserve the modifier order: point-buy base score, then base race modifier, then subrace modifier.
+- Keep calculations server-side and testable.
+- Do not hardcode class data in views or templates; use database records.

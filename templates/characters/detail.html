@@ -1,0 +1,213 @@
+{% extends "rules/base.html" %}
+
+{% block title %}{{ character.name }} | POTM Character Creator{% endblock %}
+
+{% block content %}
+  <header class="build-header" id="top">
+    <div>
+      <h1>{{ character.name }}</h1>
+      <p class="subtitle">{{ character.class_breakdown|default:"No class levels" }}</p>
+    </div>
+    <div class="actions">
+      <a class="button" href="{% url 'characters:list' %}">Characters</a>
+      <a class="button" href="{% url 'characters:create' %}">New Character</a>
+      <a class="button" href="{% url 'characters:edit' character.pk %}">Edit Sheet</a>
+      <a class="button" href="{% url 'characters:class_progression' character.pk %}">Class Levels</a>
+      <a class="button" href="{% url 'characters:skills' character.pk %}">Skills</a>
+      <a class="button" href="/admin/characters/character/{{ character.pk }}/change/">Edit in Admin</a>
+    </div>
+  </header>
+
+  <nav class="sheet-tabs" aria-label="Character sheet sections">
+    <a href="#summary">Summary</a>
+    <a href="#progression">Class Progression</a>
+    <a href="#skills">Skills</a>
+    <a href="#notes">Notes</a>
+  </nav>
+
+  <section id="summary" class="sheet-section">
+    <h2>Summary</h2>
+    <div class="sheet-summary-grid">
+      <div class="panel identity-panel">
+        <div class="identity-row">
+          <strong>Race</strong>
+          <span>{{ character.race.name }}</span>
+        </div>
+        <div class="identity-row">
+          <strong>Subrace</strong>
+          <span>{{ character.subrace.name|default:"-" }}</span>
+        </div>
+        <div class="identity-row">
+          <strong>Alignment</strong>
+          <span>{{ character.get_alignment_display|default:"-" }}</span>
+        </div>
+        <div class="identity-row">
+          <strong>Deity</strong>
+          <span>{{ character.deity|default:"-" }}</span>
+        </div>
+        <div class="identity-row">
+          <strong>Total Level</strong>
+          <span>{{ character.total_level }}</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <table>
+          <thead>
+            <tr>
+              <th>Ability</th>
+              <th>Base</th>
+              <th>Race</th>
+              <th>Final</th>
+              <th>Mod</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in character.ability_rows %}
+              <tr>
+                <td>{{ row.name }}</td>
+                <td>{{ row.base }}</td>
+                <td>{{ row.base_race }}</td>
+                <td>{{ row.final }}</td>
+                <td>{{ row.modifier_display }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sheet-stat-grid">
+      <div class="panel">
+        <h2>Attack Bonuses</h2>
+        <table>
+          <tbody>
+            {% for label, value in character.attack_bonus_rows %}
+              <tr>
+                <td>{{ label }}</td>
+                <td>{{ value }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <h2>Saving Throws</h2>
+        <table>
+          <tbody>
+            {% for label, value in character.saving_throw_rows %}
+              <tr>
+                <td>{{ label }}</td>
+                <td>{{ value }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="progression" class="sheet-section">
+    <h2>Class Progression</h2>
+    <div class="panel">
+      <p><strong>Total Level:</strong> {{ character.total_level }}</p>
+      {% if character.class_levels.all %}
+        <table>
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Level</th>
+              <th>Hit Die</th>
+              <th>Skill Points</th>
+              <th>BAB</th>
+              <th>Source Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for class_level in character.class_levels.all %}
+              <tr>
+                <td>{{ class_level.character_class.name }}</td>
+                <td>{{ class_level.level }}</td>
+                <td>{{ class_level.character_class.hit_die|default:"-" }}</td>
+                <td>{{ class_level.character_class.skill_points_per_level|default:"-" }}</td>
+                <td>{{ class_level.base_attack_bonus }}</td>
+                <td>{{ class_level.character_class.get_source_status_display }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="muted">No class levels selected.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section id="skills" class="sheet-section">
+    <h2>Skill Points & Selection</h2>
+    <div class="panel">
+      <div class="point-buy-summary">
+        <div>
+          <strong>{{ character.available_skill_points }}</strong>
+          <span>Total Points</span>
+        </div>
+        <div>
+          <strong>{{ character.spent_skill_points }}</strong>
+          <span>Spent Points</span>
+        </div>
+        <div>
+          <strong>{{ character.unspent_skill_points }}</strong>
+          <span>Unspent Points</span>
+        </div>
+      </div>
+      {% if character.skill_rows %}
+        <table>
+          <thead>
+            <tr>
+              <th>Skill</th>
+              <th>Ability</th>
+              <th>Ranks</th>
+              <th>Class Skill</th>
+              <th>Cost/Rank</th>
+              <th>Points</th>
+              <th>Max Ranks</th>
+              <th>Ability Mod</th>
+              <th>Race Bonus</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in character.skill_rows %}
+              <tr>
+                <td>{{ row.name }}</td>
+                <td>{{ row.ability }}</td>
+                <td>{{ row.ranks }}</td>
+                <td>{{ row.class_skill }}</td>
+                <td>{{ row.cost_per_rank }}</td>
+                <td>{{ row.point_cost }}</td>
+                <td>{{ row.max_ranks }}</td>
+                <td>{{ row.ability_modifier }}</td>
+                <td>{{ row.race_bonus }}</td>
+                <td>{{ row.total }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="muted">No skill ranks selected yet.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section id="notes" class="sheet-section">
+    <h2>Background</h2>
+    <div class="panel">
+      <p>{{ character.background|linebreaksbr|default:"No background entered." }}</p>
+    </div>
+    <h2>Notes</h2>
+    <div class="panel">
+      <p>{{ character.notes|linebreaksbr|default:"No notes entered." }}</p>
+    </div>
+    <p><a href="#top">Return to Top</a></p>
+  </section>
+{% endblock %}

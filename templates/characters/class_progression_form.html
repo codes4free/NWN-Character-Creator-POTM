@@ -1,0 +1,36 @@
+{% extends "rules/base.html" %}
+
+{% block title %}Class Progression | {{ character.name }}{% endblock %}
+
+{% block content %}
+  <header>
+    <h1>Class Progression</h1>
+    <p class="subtitle">{{ character.name }} currently has {{ character.total_level }} total class level{{ character.total_level|pluralize }}.</p>
+    <div class="actions">
+      <a class="button" href="{{ character.get_absolute_url }}">View Sheet</a>
+      <a class="button" href="{% url 'characters:edit' character.pk %}">Edit Sheet</a>
+      <a class="button" href="{% url 'characters:list' %}">Characters</a>
+    </div>
+  </header>
+
+  <section>
+    <form method="post" class="sheet-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="panel">
+        <h2>Class Levels</h2>
+        <div class="form-grid">
+          {% for field in form %}
+            <label>
+              <span>{{ field.label }}</span>
+              {{ field }}
+              <small>{{ field.help_text }}</small>
+              {{ field.errors }}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+      <button class="button" type="submit">Save Class Progression</button>
+    </form>
+  </section>
+{% endblock %}

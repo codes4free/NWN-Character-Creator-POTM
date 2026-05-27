@@ -1,0 +1,165 @@
+{% extends "rules/base.html" %}
+
+{% block title %}{{ form_title|default:"New Character" }} | POTM Character Creator{% endblock %}
+
+{% block content %}
+  <header>
+    <h1>{{ form_title|default:"New Character" }}</h1>
+    <p class="subtitle">Build the character sheet using imported rule data.</p>
+    <div class="actions">
+      <a class="button" href="{% url 'characters:list' %}">Characters</a>
+      <a class="button" href="{% url 'rules:overview' %}">Rule Database</a>
+      {% if character %}
+        <a class="button" href="{{ character.get_absolute_url }}">View Sheet</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <section>
+    <form method="post" class="sheet-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="panel">
+        <h2>Identity</h2>
+        <div class="form-grid">
+          {% for field in form %}
+            {% if field.name in "name gender alignment deity race subrace starting_class" %}
+              <label>
+                <span>{{ field.label }}</span>
+                {{ field }}
+                {{ field.errors }}
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Base Ability Scores</h2>
+        <div class="point-buy-summary">
+          <div>
+            <strong data-point-buy-remaining>{{ form.point_buy_remaining }}</strong>
+            <span>Remaining Points</span>
+          </div>
+          <div>
+            <strong data-point-buy-spent>{{ form.point_buy_spent }}</strong>
+            <span>Spent Points</span>
+          </div>
+        </div>
+        <div class="cost-rules">
+          {% for range, cost in ability_costs %}
+            <span><strong>{{ range }}</strong> {{ cost }}</span>
+          {% endfor %}
+        </div>
+        <div class="ability-grid">
+          {% for field in form %}
+            {% if field.name in "base_str base_dex base_con base_int base_wis base_cha" %}
+              <label class="ability-field" data-ability="{{ field.name|slice:'5:' }}">
+                <span>{{ field.label }}</span>
+                <div class="ability-control">
+                  <button type="button" class="step-button" data-step="-1" aria-label="Decrease {{ field.label }}">-</button>
+                  {{ field }}
+                  <button type="button" class="step-button" data-step="1" aria-label="Increase {{ field.label }}">+</button>
+                </div>
+                <small>
+                  Sheet score after base race:
+                  <strong data-effective-score="{{ field.name|slice:'5:' }}">{{ field.value|default:8 }}</strong>
+                </small>
+                {{ field.errors }}
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Notes</h2>
+        <div class="form-grid">
+          {% for field in form %}
+            {% if field.name in "background notes" %}
+              <label class="wide">
+                <span>{{ field.label }}</span>
+                {{ field }}
+                {{ field.errors }}
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <button class="button" type="submit">{{ submit_label|default:"Create Character" }}</button>
+    </form>
+  </section>
+
+  {{ race_modifiers|json_script:"race-modifiers" }}
+  <script>
+    const raceModifiers = JSON.parse(document.getElementById("race-modifiers").textContent);
+    const raceSelect = document.getElementById("id_race");
+    const remainingValue = document.querySelector("[data-point-buy-remaining]");
+    const spentValue = document.querySelector("[data-point-buy-spent]");
+    const abilities = ["str", "dex", "con", "int", "wis", "cha"];
+
+    function pointCost(score) {
+      let cost = 0;
+      for (let value = 9; value <= score; value += 1) {
+        if (value <= 14) {
+          cost += 1;
+        } else if (value <= 16) {
+          cost += 2;
+        } else {
+          cost += 3;
+        }
+      }
+      return cost;
+    }
+
+    function updatePointBuyDisplay() {
+      const selectedRace = raceSelect ? raceSelect.value : "";
+      const modifiers = raceModifiers[selectedRace] || {};
+      let spent = 0;
+
+      for (const ability of abilities) {
+        const input = document.getElementById(`id_base_${ability}`);
+        const score = Number.parseInt(input.value || "8", 10);
+        const safeScore = Number.isNaN(score) ? 8 : score;
+        const modifier = modifiers[ability] || 0;
+        const effective = document.querySelector(`[data-effective-score="${ability}"]`);
+
+        spent += pointCost(safeScore);
+        if (effective) {
+          effective.textContent = safeScore + modifier;
+        }
+      }
+
+      if (spentValue) {
+        spentValue.textContent = spent;
+      }
+      if (remainingValue) {
+        remainingValue.textContent = 30 - spent;
+      }
+    }
+
+    for (const button of document.querySelectorAll(".step-button")) {
+      button.addEventListener("click", () => {
+        const input = button.parentElement.querySelector("input");
+        const nextValue = Number.parseInt(input.value || "8", 10) + Number.parseInt(button.dataset.step, 10);
+        input.value = Math.min(18, Math.max(8, nextValue));
+        updatePointBuyDisplay();
+      });
+    }
+
+    for (const ability of abilities) {
+      const input = document.getElementById(`id_base_${ability}`);
+      if (input) {
+        input.addEventListener("input", updatePointBuyDisplay);
+      }
+    }
+
+    if (raceSelect) {
+      raceSelect.addEventListener("change", updatePointBuyDisplay);
+    }
+
+    updatePointBuyDisplay();
+  </script>
+{% endblock %}

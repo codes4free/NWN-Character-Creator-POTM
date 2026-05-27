@@ -7,6 +7,7 @@ export interface SkillRule {
   keyAbility: AbilityName;
   trainedOnly: boolean;
   armorCheckPenaltyApplies: boolean;
+  classSkillIds: string[];
   sourceMetadata: SourceMetadata;
 }
 
@@ -17,6 +18,7 @@ export const skills: SkillRule[] = [
     keyAbility: 'dex',
     trainedOnly: false,
     armorCheckPenaltyApplies: true,
+    classSkillIds: ['assassin', 'ranger', 'rogue', 'shadowdancer'],
     sourceMetadata: {
       source: 'NWN Wiki / POTM rules',
       sourceUrl: 'https://nwn.fandom.com/wiki',
@@ -31,6 +33,7 @@ export const skills: SkillRule[] = [
     keyAbility: 'wis',
     trainedOnly: false,
     armorCheckPenaltyApplies: false,
+    classSkillIds: ['druid', 'monk', 'ranger', 'rogue'],
     sourceMetadata: {
       source: 'NWN Wiki / POTM rules',
       sourceUrl: 'https://nwn.fandom.com/wiki',
@@ -45,6 +48,7 @@ export const skills: SkillRule[] = [
     keyAbility: 'int',
     trainedOnly: false,
     armorCheckPenaltyApplies: false,
+    classSkillIds: ['bard', 'beguiler', 'cleric', 'sorcerer', 'warlock', 'wizard'],
     sourceMetadata: {
       source: 'NWN Wiki / POTM rules',
       sourceUrl: 'https://nwn.fandom.com/wiki',

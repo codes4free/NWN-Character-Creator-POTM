@@ -1,0 +1,59 @@
+{% extends "rules/base.html" %}
+
+{% block title %}POTM Character Creator{% endblock %}
+
+{% block content %}
+      <header>
+        <h1>POTM Character Creator</h1>
+        <p class="subtitle">Rule database overview for the Neverwinter Nights Ravenloft: Prisoners of the Mist character creator.</p>
+        <div class="actions">
+          <a class="button" href="/admin/">Open Admin</a>
+          <a class="button" href="{% url 'rules:needs_verification' %}">Needs Verification</a>
+          <a class="button" href="{% url 'characters:list' %}">Characters</a>
+        </div>
+      </header>
+
+      <section aria-labelledby="counts-title">
+        <h2 id="counts-title">Imported Rule Data</h2>
+        <div class="counts">
+          {% for label, count in rule_counts %}
+            <div class="count">
+              <strong>{{ count }}</strong>
+              <span>{{ label }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section aria-labelledby="sources-title">
+        <h2 id="sources-title">Rule Sources</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>URL</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for source in sources %}
+              <tr>
+                <td>{{ source.name }}</td>
+                <td>
+                  {% if source.url %}
+                    <a href="{{ source.url }}">{{ source.url }}</a>
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td>{{ source.description|default:"-" }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="3">No rule sources imported yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+{% endblock %}
